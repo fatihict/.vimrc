@@ -23,7 +23,8 @@ set shiftwidth=4
 set smartindent            " It's smart, so i need this!
 set autoindent             " always set autoindenting on
 set copyindent             " copy the previous indentation on autoindenting
-set smartcase                   " ignore case if search pattern is all lowercase
+set ignorecase
+set smartcase              " ignore case if search pattern is all lowercase
 
 " Start every function unfolded, because i don't give a fuck about folds :P
 set foldlevel=99
@@ -117,8 +118,8 @@ vmap y y`]
 "
 " NERDTree
 "
-" Vim fugitive should take over!!!
-let NERDTReeHijackNetrw = 0
+" Vim vinegar should take over!!!
+let NERDTreeHijackNetrw = 0
 
 "
 " CtrlP
