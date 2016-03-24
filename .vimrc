@@ -13,7 +13,10 @@ set splitright
 set backupdir=~/.vim/backup_files//
 set directory=~/.vim/swap_files//
 set undodir=~/.vim/undo_files//
+
+" Completion
 set complete=.,w,b,u 
+let g:SuperTabDefaultCompletionType = "<c-n>"           " Rotate from top to bottom
 
 " Tabs and spaces at 4
 set tabstop=4
@@ -46,6 +49,8 @@ so ~/.vim/plugins.vim
 
 "------------------ Mappings ------------------"
 
+nnoremap gp `[v`]
+
 "
 " All modes
 "
@@ -61,7 +66,6 @@ map <C-L> <C-W><C-L>
 "
 " Easy escape
 imap jj <esc>
-imap jk <esc>
 
 
 "
@@ -98,6 +102,9 @@ nmap <Leader>es :e ~/.vim/snippets/
 "Quickly browse to any tag/symbol in the project.
 "Tip: run ctags -R to regenerated the index.
 nmap <Leader>f :tag<space>
+
+" Toggle line numbers
+nmap <C-N><C-N> :set invnumber<CR>
 
 "
 " Visual mode
@@ -147,7 +154,16 @@ nnoremap <silent><leader>pf :call PhpCsFixerFixFile()<cr>
 " Extra space for NERDCommenter
 let NERDSpaceDelims=1
 
+"
+" Easymotion
+"
+" Change the default easy motion mapping
+nmap s <Plug>(easymotion-s)
 
+"
+" vim-jsx
+"
+let g:jsx_ext_required = 0
 
 
 "------------------ Visuals ------------------"
@@ -170,6 +186,9 @@ nmap <Leader><Leader>c :e app/Http/Controllers/<cr>
 nmap <Leader><Leader>m :CtrlP<cr>app/
 nmap <Leader><Leader>v :e resources/views/<cr>
 nmap <Leader><Leader>a :e resources/assets/<cr>
+nmap <Leader><Leader>p :e public/<cr>
+nmap <Leader><Leader>d :e database/<cr>
+nmap <Leader><Leader>t :e tests/<cr>
 
 
 
