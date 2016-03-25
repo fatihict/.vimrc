@@ -106,6 +106,11 @@ nmap <Leader>f :tag<space>
 " Toggle line numbers
 nmap <C-N><C-N> :set invnumber<CR>
 
+" jk should move up and down a line, even when the line is too long and breaks
+" on a new line
+nmap j gj
+nmap k gk
+
 "
 " Visual mode
 "
@@ -158,7 +163,7 @@ let NERDSpaceDelims=1
 " Easymotion
 "
 " Change the default easy motion mapping
-nmap s <Plug>(easymotion-s)
+nmap <Leader>s <Plug>(easymotion-s)
 
 "
 " vim-jsx
@@ -218,3 +223,51 @@ function! IPhpExpandClass()
 endfunction
 autocmd FileType php inoremap <Leader>nf <Esc>:call IPhpExpandClass()<CR>
 autocmd FileType php noremap <Leader>nf :call PhpExpandClass()<CR>
+
+
+
+
+
+
+"------------------ Tips ------------------"
+
+"=============== Insert mode ==============="
+
+" <C-h> Delete back one character (backspace)
+
+" <C-w> Delete back one word
+
+" <C-u> Delete back to start of line
+
+" insert normal mode: <C-o>{single_command}
+
+
+"=============== Visual mode ==============="
+
+" u lowercase 
+
+" U uppercase 
+
+
+
+"=============== Normal mode ==============="
+
+" s command deletes the current char and puts you in insert mode which is repeatable with the dot command
+
+" ; command repeats the last search with f
+
+" , command repeats the last search with f in reverse (Dit mappen naar iets anders)
+
+" & repeat last substitution
+
+" * search for the word under the cursor
+
+" 180<C-x> find the first numeric digit and replace with the <count>
+
+" 10<C-a> find the first numeric digit and increment with the <count>
+
+" g~{motion} switch case
+
+" gU{motion} upper case
+
+" gu{motion} lower case
