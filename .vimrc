@@ -1,5 +1,11 @@
 "------------------ General settings ------------------"
 set nocompatible " Be improved!
+
+" Turns default plugins on
+filetype plugin on
+
+" Turn the matchit vim plugin on. This plugin lets the % also jump between xml tags.
+runtime macros/matchit.vim
 set backspace=indent,eol,start
 let mapleader = ','
 set nonumber
@@ -11,8 +17,23 @@ set splitright
 set backupdir=~/.vim/backup_files//
 set directory=~/.vim/swap_files//
 set undodir=~/.vim/undo_files//
+
 " Hides buffers instead of closing them in order to keep undo history and marks
 set hidden
+
+" Add a file extension to open files with the gf command
+" set suffixesadd+=.extension
+
+" That’s where the ‘path’ option comes in ( :h 'path' ). We can configure this to
+" reference a comma-separated list of directories. When we use the gf command,
+" Vim checks each of the directories listed in ‘path’ to see if it contains a filename
+" that matches the text under the cursor. The ‘path’ setting is also used by the
+" :find command, which we covered in Tip 42, on page 96.
+" We can inspect the value of the path by running this command: set path?
+" In this context, the . stands for the directory of the current file, whereas the
+" empty string (delimited by two adjacent commas) stands for the working
+" directory. The default settings work fine for this simple example, but for a
+" path=.,/usr/include,,
 
 " Tell vim to remember certain things when we exit
 "  '10  :  marks will be remembered for up to 10 previously edited files
@@ -20,7 +41,7 @@ set hidden
 "  :20  :  up to 20 lines of command-line history will be remembered
 "  %    :  saves and restores the buffer list
 "  n... :  where to save the viminfo files
-set viminfo='10,\"100,:20,%,n~/.viminfo
+set viminfo='30,\"300,:100,%,n~/.viminfo
 
 " Completion
 set complete=.,w,b,u 
@@ -53,7 +74,7 @@ set wildmode=full
 " By default, Vim records the last twenty commands. With memory becoming
 " ever cheaper in today’s computers, we can probably afford to up this limit by
 " changing the ‘history’ option. Try adding this line to your vimrc:
-set history=200
+set history=800
 
 
 
@@ -110,10 +131,10 @@ imap jj <esc>
 "
 "
 " Edit vimrc
-nmap <Leader>ev :e ~/.vimrc<cr>
+nmap <Leader>ev :tabedit ~/.vimrc<cr>
 
 " Edit plugins file
-nmap <Leader>ep :e ~/.vim/plugins.vim<cr>
+nmap <Leader>ep :tabedit ~/.vim/plugins.vim<cr>
 
 " Quick save
 nmap ,w :w<cr>
@@ -235,10 +256,10 @@ set foldcolumn=2
 
 
 "------------------ Laravel-specific ------------------"
+nmap <Leader><Leader>m :CtrlP<cr>app/
 nmap <Leader>lr :e app/Http/routes.php<cr>
 nmap <Leader>lm :!php artisan make:
 nmap <Leader><Leader>c :e app/Http/Controllers/<cr>
-nmap <Leader><Leader>m :CtrlP<cr>app/
 nmap <Leader><Leader>v :e resources/views/<cr>
 nmap <Leader><Leader>a :e resources/assets/<cr>
 nmap <Leader><Leader>p :e public/<cr>
@@ -308,6 +329,10 @@ augroup END
 " <C-r> = calculation e.g. 5 + 5 returns 10 in current position in insert mode
 
 
+
+
+
+
 "=============== Visual mode ==============="
 
 " u lowercase 
@@ -315,6 +340,10 @@ augroup END
 " U uppercase 
 
 " o go to the other end of the selection
+
+
+
+
 
 "=============== Normal mode ==============="
 
@@ -343,6 +372,67 @@ augroup END
 " q/ Open the command-line window with history of searches
 
 " ctrl-f Switch from Command-Line mode to the command-line window
+
+" <C-o> move backward in the jump list
+
+" <C-i> move forward in the jump list
+
+" Command                                         Effect
+" =================================================================================
+" [count]G                                 | Jump to line number
+" ---------------------------------------------------------------------------------
+" //pattern <CR> / ?pattern <CR> / n / N   | Jump to next/previous 
+"                                          | occurrence of pattern
+" ---------------------------------------------------------------------------------
+" %                                        | Jump to matching parenthesis
+" ---------------------------------------------------------------------------------
+" ( / )                                    | Jump to start of previous or
+"                                          | next sentence
+" ---------------------------------------------------------------------------------
+" { / }                                    | Jump to start of previous or  
+"                                          | next paragraph
+" ---------------------------------------------------------------------------------
+" H / M / L                                | Jump to top/middle/bottom of  
+"                                          | screen
+" ---------------------------------------------------------------------------------
+" gf                                       | Jump to file name under the 
+"                                          | cursor
+" ---------------------------------------------------------------------------------
+" <C-]>                                    | Jump to definition of keyword
+"                                          | under the cursor
+" ---------------------------------------------------------------------------------
+" ’{mark} / `{mark}                        | Jump to a mark 
+" ---------------------------------------------------------------------------------
+
+" g; go backward in change list
+
+" g, go forward in change list
+
+" gi go back to the last insertion and switch back to insert mode
+
+" gf open the file under the cursor
+
+" "_ the blackhole register
+
+" Command                                         Effect
+" =================================================================================
+" %                                 | Name of the current file
+" ---------------------------------------------------------------------------------
+" #                                 | Name of the alternate file
+" ---------------------------------------------------------------------------------
+" .                                 | Last inserted text
+" ---------------------------------------------------------------------------------
+" :                                 | Last Ex command
+" ---------------------------------------------------------------------------------
+" /                                 | Last search pattern
+" ---------------------------------------------------------------------------------
+
+" Playback the last invoked marco @@
+
+
+
+
+
 
 "=============== Command mode / Ex mode ==============="
 
@@ -373,17 +463,41 @@ augroup END
 " :h :range! ).
 
 " Command                  Effect
-" ========================================================================
+" =================================================================================
 " :shell                |  Start a shell (return to Vim by typing exit)
-" ------------------------------------------------------------------------
+" ---------------------------------------------------------------------------------
 " :!{cmd}               |  Execute {cmd} with the shell
-" ------------------------------------------------------------------------
+" ---------------------------------------------------------------------------------
 " :read !{cmd}          |  Execute {cmd} in the shell and insert its standard output 
 "                       |  below the cursor
-" ------------------------------------------------------------------------
+" ---------------------------------------------------------------------------------
 " :[range]write !{cmd}  |  Execute {cmd} in the shell with [range] lines as standard
 "                       |  input
-" ------------------------------------------------------------------------
+" ---------------------------------------------------------------------------------
 " :[range]!{filter}     |  Filter the specified [range] through external 
 "                       |  program {filter}
-" ------------------------------------------------------------------------
+" ---------------------------------------------------------------------------------
+
+" See the jump list with :jumps
+
+" See the change list with :changes
+
+" See the regiters with :register or shorthand :reg
+
+
+
+
+
+
+
+"=============== Plugins ==============="
+" Surround.vim
+" Surround the selection with double quotes.
+" S"
+
+
+
+
+
+"=============== Other tips ==============="
+"
