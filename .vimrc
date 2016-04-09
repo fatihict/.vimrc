@@ -549,14 +549,17 @@ augroup END
 
 " Command                       Effect
 " =================================================================================
-" <C-]>                       | Jump to the first tag that matches the word under "                             | the cursor
+" <C-]>                       | Jump to the first tag that matches the word under 
+"                             | the cursor
 " ---------------------------------------------------------------------------------
-" g<C-]>                      | Prompt user to select from multiple matches for the "                             | word under the cursor. If only one match exists, 
+" g<C-]>                      | Prompt user to select from multiple matches for the 
+"                             | word under the cursor. If only one match exists, 
 "                             | jump to it without prompting.
 " ---------------------------------------------------------------------------------
 " :tag {keyword}              | Jump to the first tag that matches {keyword}
 " ---------------------------------------------------------------------------------
-" :tjump {keyword}            | Prompt user to select from multiple matches for   "                             | {keyword}. If only one match exists, jump to it 
+" :tjump {keyword}            | Prompt user to select from multiple matches for  
+"                             | {keyword}. If only one match exists, jump to it 
 "                             | without prompting.
 " ---------------------------------------------------------------------------------
 " :pop or <C-t>               | Reverse through tag history
@@ -740,9 +743,11 @@ augroup END
 " ---------------------------------------------------------------------------------
 " &                         |   Insert the entire matched pattern
 " ---------------------------------------------------------------------------------
-" ~                         |   Use {string} from the previous invocation of :"                           |   substitute
+" ~                         |   Use {string} from the previous invocation of :
+"                           |   substitute
 " ---------------------------------------------------------------------------------
-" \=                        |   {Vim script} Evaluate {Vim script} expression; use   "                           |   result as replacement {string}
+" \=                        |   {Vim script} Evaluate {Vim script} expression; use   
+"                           |   result as replacement {string}
 " ---------------------------------------------------------------------------------
 
 " The c flag causes Vim to show us each match and ask “Replace with copy?”
