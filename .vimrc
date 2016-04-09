@@ -18,6 +18,9 @@ set backupdir=~/.vim/backup_files//
 set directory=~/.vim/swap_files//
 set undodir=~/.vim/undo_files//
 
+" No more swap files!
+set noswapfile
+
 " Hides buffers instead of closing them in order to keep undo history and marks
 set hidden
 
@@ -81,7 +84,7 @@ set history=800
 "------------------ Typos ------------------"
 " Because i fail at letting go shift after writing a colon
 abbrev Wq wq
-            
+        
 
 
 
@@ -118,6 +121,9 @@ cmap w!! w !sudo tee > /dev/null %
 " We can get the best of both by creating the following custom mappings:
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
+
+" Now when we type %% on Vim’s : command-line prompt, it automatically expands to the path of the active buffer, just as though we had typed %:h <Tab>
+cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 "
 " Insert mode
@@ -164,13 +170,37 @@ nmap <Leader>f :tag<space>
 " Toggle line numbers
 nmap <C-N><C-N> :set invnumber<CR>
 
-" jk should move up and down a line, even when the line is too long and breaks
-" on a new line
-nmap j gj
-nmap k gk
+" jk should move up and down a line, even when the line is too long and breaks on a new line
+nnoremap k gk
+nnoremap gk k
+nnoremap j gj
+nnoremap gj j
+
+" If the window is small and a line is wrapped i usually want to go to the first character of the current visible line instead of the actual line.
+nnoremap 0 g0
+nnoremap ^ g^
+nnoremap g0 0
+nnoremap g^ ^
 
 " select the pasted block
 nnoremap gp `[v`]
+
+" Because my leader key is mapped to a comma, i can stil use the comma to reverse the f command
+noremap \ ,
+
+" Making & trigger the :&& command is more useful. It preserves flags and therefore produces more consistent results. These mappings fix the & command in Normal mode and create a Visual mode equivalent:
+nnoremap & :&&<CR>
+xnoremap & :&&<CR>
+
+" Move a line of text using ALT+[jk]
+" Alt keys are represented with the esc key modifier, so when i go back to normal mode pressing <esc> and follow with j or k these mapping will execute..ê
+" nmap <A-k> mz:m-2<cr>`z
+" nmap <A-j> mz:m+<cr>`z
+" Because of these mappings i get 'weird' characters when escaping to normal mode and pressing the j key
+" execute "set <M-j>=\ej"
+" execute "set <M-k>=\ek"
+" vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+" vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 "
 " Visual mode
@@ -250,6 +280,13 @@ set t_Co=256
 hi LineNr guibg=bg
 set foldcolumn=2
 
+" Break only on whole words instead of in a middle of a
+" word.
+set wrap
+set linebreak
+set nolist
+set textwidth=0
+set wrapmargin=0
 
 
 
@@ -272,8 +309,8 @@ nmap <Leader><Leader>t :e tests/<cr>
 
 "------------------ Auto-commands ------------------"
 augroup autosourcing
-	autocmd!
-	autocmd BufWritePost .vimrc source %
+autocmd!
+autocmd BufWritePost .vimrc source %
 augroup end
 
 
@@ -282,15 +319,15 @@ augroup end
 
 "------------------ Functions ------------------"
 function! IPhpInsertUse()
-	call PhpInsertUse()
-	call feedkeys('a',  'n')
+call PhpInsertUse()
+call feedkeys('a',  'n')
 endfunction
 autocmd FileType php inoremap <Leader>n <Esc>:call IPhpInsertUse()<CR>
 autocmd FileType php noremap <Leader>n :call PhpInsertUse()<CR>
 
 function! IPhpExpandClass()
-	call PhpExpandClass()
-	call feedkeys('a', 'n')
+call PhpExpandClass()
+call feedkeys('a', 'n')
 endfunction
 autocmd FileType php inoremap <Leader>nf <Esc>:call IPhpExpandClass()<CR>
 autocmd FileType php noremap <Leader>nf :call PhpExpandClass()<CR>
@@ -298,15 +335,15 @@ autocmd FileType php noremap <Leader>nf :call PhpExpandClass()<CR>
 " Restore the cursor to the same location on the last edit
 " http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
 function! ResCur()
-  if line("'\"") <= line("$")
-    normal! g`"
-    return 1
-  endif
+if line("'\"") <= line("$")
+normal! g`"
+return 1
+endif
 endfunction
 
 augroup resCur
-  autocmd!
-  autocmd BufWinEnter * call ResCur()
+autocmd!
+autocmd BufWinEnter * call ResCur()
 augroup END
 
 
@@ -328,8 +365,11 @@ augroup END
 
 " <C-r> = calculation e.g. 5 + 5 returns 10 in current position in insert mode
 
+" <C-x><C-l> autocomplete a whole line
 
+" <C-x><C-f> autocomplete filenames
 
+" When we trigger an autocomplete command, Vim usually offers suggestions on how to complete the word at the current cursor position. But in the case of <C-x>s , Vim scans backward from the cursor position, stopping when it finds a misspelled word. It then builds a word list from suggested corrections and presents them in an autocomplete pop-up menu. of <C-x><C-s>
 
 
 
@@ -341,7 +381,7 @@ augroup END
 
 " o go to the other end of the selection
 
-
+" Visually selecting lines and executing normal @{register} will execute a macro in parallel on the selected lines
 
 
 
@@ -351,7 +391,7 @@ augroup END
 
 " ; command repeats the last search with f
 
-" , command repeats the last search with f in reverse (Dit mappen naar iets anders)
+" , command repeats the last search with f in reverse
 
 " & repeat last substitution
 
@@ -414,7 +454,7 @@ augroup END
 
 " "_ the blackhole register
 
-" Command                                         Effect
+" Command                             Effect
 " =================================================================================
 " %                                 | Name of the current file
 " ---------------------------------------------------------------------------------
@@ -429,7 +469,123 @@ augroup END
 
 " Playback the last invoked marco @@
 
+" :cl[ose] or <C-w>c close the active window
 
+" :On[ly] or <C-w>o keep only the active window
+
+" Command                             Effect
+" =================================================================================
+" <C-w> =                           | Equalize width and height of all windows
+" ---------------------------------------------------------------------------------
+" <C-w> -                           | Maximize height of the active window
+" ---------------------------------------------------------------------------------
+" <C-w> |                           | Maximize width of the active window
+" ---------------------------------------------------------------------------------
+" [N]<C-w> _                        | Set active window height to [N] rows
+" ---------------------------------------------------------------------------------
+" [N]<C-w> |                        | Set active window height to [N] columns
+" ---------------------------------------------------------------------------------
+
+" The :lcd {path} command lets us set the working directory locally for the current window. If we create a new tab page and then use the :lcd command to switch to another directory, we can then comfortably scope each tab page to a different project. Note that :lcd applies locally to the current window, not to the current tab page. If we have a tab page containing two or more split windows, we could set the local working directory for all of them by running :windo lcd {path}.
+
+" <C-w>T Move the current window into it's own tab (Only works it here is more than 1 window)
+
+" Command                             Effect
+" =================================================================================
+" :tabn[ext] {N} {N}gt              | Switch to tab page number {N}
+" ---------------------------------------------------------------------------------
+" :tabn[ext] gt                     | Switch to the next tab
+" ---------------------------------------------------------------------------------
+" :tabp[revious] gT                 | Switch to the previous tab page
+" ---------------------------------------------------------------------------------
+
+" <C-g? echoes the name and status of the current file
+
+" To change two vertically split windows to horizonally split
+" Ctrl-w t Ctrl-w K
+
+" Horizontally to vertically:
+" Ctrl-w t Ctrl-w H
+
+" <C-G> see where you are in the file
+
+" ge Backward to end of the previous word
+
+" is Current sentence
+
+" as Current sentence plus one space
+
+" ip Current paragraph
+
+" ap Current paragraph plus one blank line
+
+" (Vim's automatic marks) 
+" Command                       Effect
+" =================================================================================
+" ``                        |   Position before the last jump within current file
+" ---------------------------------------------------------------------------------
+" `.                        |   Location of last change
+" ---------------------------------------------------------------------------------
+" `^                        |   Location of last insertion
+" ---------------------------------------------------------------------------------
+" `[                        |   Start of last change or yank
+" ---------------------------------------------------------------------------------
+" `]                        |   End of last change or yank
+" ---------------------------------------------------------------------------------
+" `<                        |   Start of last visual selection
+" ---------------------------------------------------------------------------------
+" `>                        |   End of last visual selection
+" ---------------------------------------------------------------------------------
+
+" {count}@{register}
+
+" q{capitalLetter} will append to a macro
+
+" //e can be used as a motion to select a search from start to end. We could uppercase all characters in a search by using gU//e<cr> 
+
+" We can repeat the command across the entire file just by pressing g& (see :h g& ), which is equivalent to running the following: :%s//~/&
+
+" Pressing <C-]> makes our cursor jump from the keyword under the cursor to the definition.
+
+" Command                       Effect
+" =================================================================================
+" <C-]>                       | Jump to the first tag that matches the word under "                             | the cursor
+" ---------------------------------------------------------------------------------
+" g<C-]>                      | Prompt user to select from multiple matches for the "                             | word under the cursor. If only one match exists, 
+"                             | jump to it without prompting.
+" ---------------------------------------------------------------------------------
+" :tag {keyword}              | Jump to the first tag that matches {keyword}
+" ---------------------------------------------------------------------------------
+" :tjump {keyword}            | Prompt user to select from multiple matches for   "                             | {keyword}. If only one match exists, jump to it 
+"                             | without prompting.
+" ---------------------------------------------------------------------------------
+" :pop or <C-t>               | Reverse through tag history
+" ---------------------------------------------------------------------------------
+" :tag                        | Advance through tag history
+" ---------------------------------------------------------------------------------
+" :tnext                      | Jump to next matching tag
+" ---------------------------------------------------------------------------------
+" :tprev                      | Jump to previous matching tag
+" ---------------------------------------------------------------------------------
+" :tfirst                     | Jump to first matching tag
+" ---------------------------------------------------------------------------------
+" :tlast                      | Jump to last matching tag
+" ---------------------------------------------------------------------------------
+" :tselect                    | Prompt user to choose an item from the tag match list
+" ---------------------------------------------------------------------------------
+
+" We can jump backward and forward between flagged words with the [s and ]s commands, respectively (see :h ]s ). With our cursor positioned on a misspelled word, we can ask Vim for a list of suggested corrections by invoking the z= command (see :h z= )
+
+" (Vim's spell checker) 
+" Command                       Effect
+" =================================================================================
+" ]s                          | Jump to next spelling error
+" [s                          | Jump to previous spelling error
+" z=                          | Suggest corrections for current word
+" zg                          | Add current word to spell file
+" zw                          | Remove current word from spell file
+" zug                         | Revert zg or zw command for current word
+" ---------------------------------------------------------------------------------
 
 
 
@@ -478,17 +634,70 @@ augroup END
 "                       |  program {filter}
 " ---------------------------------------------------------------------------------
 
-" See the jump list with :jumps
-
 " See the change list with :changes
 
 " See the regiters with :register or shorthand :reg
 
+" :normal to execute a normal mode in Ex mode
 
+" :tabo[nly] Keep only the current tab
 
+" Rearranging Tabs : We can use the :tabmove [N] Ex command to rearrange tab pages. When [N] is 0, the current tab page is moved to the beginning, and if we omit [N], the current tab page is moved to the end.
 
+" :pwd also has a vim implementation to print the working directory.
 
+" :edit %<Tab> => % is a shorthand for the filepath of the active buffer
 
+" :edit %:h<Tab> => The :h modifier removes the filename while preserving the rest of the path
+
+" :%s///gn report the number of matched. (Will not substitute, looks a bit hacky..)
+
+" :%s//\=@0/g replace the search with the contents of the yank register
+
+" We can always specify a new range and replay the substitution using the :&& command. It doesn’t matter what range was used the last time. :&& by itself acts on the current line, :'<,'>&& acts on the visual selection, and :%&& acts on the entire file. As we saw already, the g& command is a handy shortcut for :%&& .
+
+" On Vim’s command line, | simply stands for a command separator, making it equivalent to the semicolon in the Unix shell. 
+
+" :g/{pattern}/[cmd] 
+
+" :g/{pattern}/[range][cmd] Ex commands accept a range so the global could have this signature
+
+" :v/href/d => vglobal delete every line that doesn't contain an href
+
+" :g/search/d delete every line containing the match
+
+" :g/search prints all the searches (print is the default command)
+
+" :g/search/yank A appends all matches to the a register => Capital A means append to register.
+
+" :g/search/t$ copy all mataches to the bottom of the file
+
+" :g/{/ .+1,/}/-1 > indents all blocks
+
+" (Browse the quickfix list) 
+" Command                       Effect
+" =================================================================================
+" :cnext                    |   Jump to next item
+" :cprev                    |   Jump to previous item
+" :cfirst                   |   Jump to first item
+" :clast                    |   Jump to last item
+" :cnfile                   |   Jump to first item in next file
+" :cpfile                   |   Jump to last item in previous file
+" :cc N                     |   Jump to nth item
+" :copen                    |   Open the quickfix window
+" :cclose                   |   Close the quickfix window
+" ---------------------------------------------------------------------------------
+
+" :cd - switches to the previous working directory 
+
+" :set spell turn on spell checking
+
+" :set spelllang=en_us set spell checker language
+
+" How jargon was sourced for practical_vim
+" setlocal spelllang=en_us
+" setlocal spellfile=~/.vim/spell/en.utf-8.add
+" setlocal spellfile+=~/books/practical_vim/jargon.utf-8.add
 
 "=============== Plugins ==============="
 " Surround.vim
@@ -500,4 +709,73 @@ augroup END
 
 
 "=============== Other tips ==============="
-"
+" \zs to specify the start of a subset in a search
+
+" \ze to specify the end of a subset in a search
+
+" \x stands for a character class or [0-9A-Fa-f]
+
+" \V very no magic search
+
+" \v very magic search 
+
+" <{word_boundaries}> in search
+
+" % will ignore the captured parenthesis in search, so in regex you can't refer back to them, because they will be ignored :)
+
+" (Symbol Represents) 
+" Command                       Effect
+" =================================================================================
+" \r                        |   Insert a carriage return
+" ---------------------------------------------------------------------------------
+" \t                        |   Insert a tab character
+" ---------------------------------------------------------------------------------
+" \\                        |   Insert a single backslash
+" ---------------------------------------------------------------------------------
+" \1                        |   Insert the first submatch
+" ---------------------------------------------------------------------------------
+" \2                        |   Insert the second submatch (and so on, up to \9)
+" ---------------------------------------------------------------------------------
+" \0                        |   Insert the entire matched pattern
+" ---------------------------------------------------------------------------------
+" &                         |   Insert the entire matched pattern
+" ---------------------------------------------------------------------------------
+" ~                         |   Use {string} from the previous invocation of :"                           |   substitute
+" ---------------------------------------------------------------------------------
+" \=                        |   {Vim script} Evaluate {Vim script} expression; use   "                           |   result as replacement {string}
+" ---------------------------------------------------------------------------------
+
+" The c flag causes Vim to show us each match and ask “Replace with copy?”
+" The following commands are available when we are in the replace mode:
+
+" Trigger                       Effect
+" =================================================================================
+" y                         |   Substitute this match
+" ---------------------------------------------------------------------------------
+" n                         |   Skip this match
+" ---------------------------------------------------------------------------------
+" q                         |   Quit substituting
+" ---------------------------------------------------------------------------------
+" l                         |   “last”—Substitute this match, then quit
+" ---------------------------------------------------------------------------------
+" a                         |   “all”—Substitute this and any remaining matches
+" ---------------------------------------------------------------------------------
+" <C-e>                     |   Scroll the screen up
+" ---------------------------------------------------------------------------------
+" <C-y>                     |   Scroll the screen down
+" ---------------------------------------------------------------------------------
+
+" Configure the ‘path’
+" The ‘path’ option allows us to specify a set of directories inside of which Vim
+" will search when the :find command is invoked (see :h 'path' ). In our case, we
+" want to make it easier to look up files in the app/controllers and app/views directo-
+" ries. We can add these to our path simply by running this:
+" ➾ :set path+=app/**
+" The ** wildcard matches all subdirectories beneath the app/ directory. We
+" discussed wildcards in Populate the Argument List, on page 81, but the
+" treatment of * and ** is slightly different in the context of the ‘path’ setting (see
+" :h file-searching ). The wildcards are handled by Vim rather than by the shell.
+
+" Vim has a vast number of motions. We can’t cover them all in this chapter,
+" so I recommend that you look up the :h motion.txt section of Vim’s documen-
+" tation for a complete reference.
