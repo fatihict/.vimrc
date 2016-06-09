@@ -1,4 +1,4 @@
-"------------------ General settings ------------------"
+" -----------------  General settings ------------------"
 set nocompatible " Be improved!
 
 " Turns default plugins on
@@ -17,6 +17,9 @@ set splitright
 set backupdir=~/.vim/backup_files//
 set directory=~/.vim/swap_files//
 set undodir=~/.vim/undo_files//
+
+" Use shell aliases in cmd mode
+set shell=zsh\ -l
 
 " No more swap files!
 set noswapfile
@@ -90,6 +93,14 @@ abbrev Wq wq
 
 "------------------ Vundle ------------------"
 so ~/.vim/plugins.vim
+
+
+
+"------------------ Vim-Plug ------------------"
+call plug#begin('~/.vim/plugins_by_vimplug')
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+call plug#end()
 
 
 
@@ -229,6 +240,8 @@ let NERDTreeHijackNetrw = 0
 "
 let g:ctrlp_custom_ignore = 'node_modules\DS_Store\|git'
 let g:ctrlp_match_window = 'top,order:ttb,min:1,max:30,results:30'
+let g:ctrlp_map=',p'
+let g:ctrlp_cmd = 'CtrlP'
 
 "
 " Greplace.vim
@@ -260,6 +273,37 @@ nmap <Leader>s <Plug>(easymotion-s)
 " vim-jsx
 "
 let g:jsx_ext_required = 0
+
+"
+" Elm
+"
+nnoremap <leader>el :ElmEvalLine<CR>
+vnoremap <leader>es :<C-u>ElmEvalSelection<CR>
+nnoremap <leader>em :ElmMakeCurrentFile<CR>
+
+"
+" fzf.vim
+" Mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+" Insert mode completion
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+
+" " Advanced customization using autoload functions
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
+
+let g:fzf_action = {
+      \ 'ctrl-s': 'split',
+      \ 'ctrl-v': 'vsplit'
+      \ }
+nnoremap <c-p> :FZF<cr>
+
+
 
 
 "------------------ Visuals ------------------"
@@ -313,6 +357,8 @@ autocmd!
 autocmd BufWritePost .vimrc source %
 augroup end
 
+autocmd BufWritePost *.elm ElmMakeCurrentFile
+
 
 
 
@@ -336,7 +382,8 @@ autocmd FileType php noremap <Leader>nf :call PhpExpandClass()<CR>
 " http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
 function! ResCur()
 if line("'\"") <= line("$")
-normal! g`"
+" This line shows error 'Mark not set'
+" normal! g`"
 return 1
 endif
 endfunction
