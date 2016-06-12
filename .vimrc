@@ -30,10 +30,10 @@ set hidden
 " Add a file extension to open files with the gf command
 " set suffixesadd+=.extension
 
-" That’s where the ‘path’ option comes in ( :h 'path' ). We can configure this to
+" That's where the 'path' option comes in ( :h 'path' ). We can configure this to
 " reference a comma-separated list of directories. When we use the gf command,
-" Vim checks each of the directories listed in ‘path’ to see if it contains a filename
-" that matches the text under the cursor. The ‘path’ setting is also used by the
+" Vim checks each of the directories listed in 'path' to see if it contains a filename
+" that matches the text under the cursor. The 'path' setting is also used by the
 " :find command, which we covered in Tip 42, on page 96.
 " We can inspect the value of the path by running this command: set path?
 " In this context, the . stands for the directory of the current file, whereas the
@@ -69,17 +69,17 @@ set smartcase              " ignore case if search pattern is all lowercase
 " Start every function unfolded, because i don't give a fuck about folds :P
 set foldlevel=99
 
-" With the ‘wildmenu’ option enabled, Vim provides a navigable list of suggestions.
+" With the 'wildmenu' option enabled, Vim provides a navigable list of suggestions.
 " We can scroll forward through the items by pressing <Tab>, <C-n>, or <Right>,
 " and we can scroll backward through them with <S-Tab>, <C-p>, or <Left>.
-" If you’re used to the autocomplete menu provided by zsh, you might want to
+" If you're used to the autocomplete menu provided by zsh, you might want to
 " try this instead:
 set wildmenu
 set wildmode=full
 
 " By default, Vim records the last twenty commands. With memory becoming
-" ever cheaper in today’s computers, we can probably afford to up this limit by
-" changing the ‘history’ option. Try adding this line to your vimrc:
+" ever cheaper in today's computers, we can probably afford to up this limit by
+" changing the 'history' option. Try adding this line to your vimrc:
 set history=800
 
 
@@ -126,14 +126,14 @@ cmap w!! w !sudo tee > /dev/null %
 " Avoid the Cursor Keys When Recalling Commands from History
 " In addition to the <Up> and <Down> keys, we can also use the <C-p> and <C-n> chords
 " to go backward and forward through our command history. The advantage of using
-" these mappings is that we don’t need to move our hands from the home row to use
-" them. But there’s a disadvantage to the <C-p> and <C-n> commands: unlike <Up> and
-" <Down> , they don’t filter the command history.
+" these mappings is that we don't need to move our hands from the home row to use
+" them. But there's a disadvantage to the <C-p> and <C-n> commands: unlike <Up> and
+" <Down> , they don't filter the command history.
 " We can get the best of both by creating the following custom mappings:
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 
-" Now when we type %% on Vim’s : command-line prompt, it automatically expands to the path of the active buffer, just as though we had typed %:h <Tab>
+" Now when we type %% on Vim's : command-line prompt, it automatically expands to the path of the active buffer, just as though we had typed %:h <Tab>
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 "
@@ -165,11 +165,11 @@ nmap <C-p><C-i> :PluginInstall<cr>
 " Nerd tree toggle
 nmap <C-k><C-b> :NERDTreeToggle<cr>
 
-" CtrlP browse recent files 
-nmap <C-e> :CtrlPMRUFiles<cr>
+" FZF browse recent files 
+nmap <C-e> :History<cr>
 
-" CtrlP browse tags
-nmap <Leader>r :CtrlPBufTag<cr>
+" FZF browse tags
+nmap <Leader>r :BTags<cr>
 
 " Easy edit snippets
 nmap <Leader>es :e ~/.vim/snippets/
@@ -235,13 +235,6 @@ vmap y y`]
 " Vim vinegar should take over!!!
 let NERDTreeHijackNetrw = 0
 
-"
-" CtrlP
-"
-let g:ctrlp_custom_ignore = 'node_modules\DS_Store\|git'
-let g:ctrlp_match_window = 'top,order:ttb,min:1,max:30,results:30'
-let g:ctrlp_map=',p'
-let g:ctrlp_cmd = 'CtrlP'
 
 "
 " Greplace.vim
@@ -309,8 +302,8 @@ nnoremap <c-p> :FZF<cr>
 "------------------ Visuals ------------------"
 
 syntax enable
-colorscheme desert
-set background=light
+set background=dark
+colorscheme hybrid_reverse
 
 " Custom highlighting, because the defaults are not custom built for me :-)..
 hi Search cterm=NONE ctermfg=white ctermbg=565656
@@ -337,7 +330,7 @@ set wrapmargin=0
 
 
 "------------------ Laravel-specific ------------------"
-nmap <Leader><Leader>m :CtrlP<cr>app/
+nmap <Leader><Leader>m :FZF<cr>app/
 nmap <Leader>lr :e app/Http/routes.php<cr>
 nmap <Leader>lm :!php artisan make:
 nmap <Leader><Leader>c :e app/Http/Controllers/<cr>
@@ -488,7 +481,7 @@ augroup END
 " <C-]>                                    | Jump to definition of keyword
 "                                          | under the cursor
 " ---------------------------------------------------------------------------------
-" ’{mark} / `{mark}                        | Jump to a mark 
+" '{mark} / `{mark}                        | Jump to a mark 
 " ---------------------------------------------------------------------------------
 
 " g; go backward in change list
@@ -656,13 +649,13 @@ augroup END
 
 " Now try typing :help, followed by the <Up> key. Again, this should scroll through
 " previous Ex commands, but instead of showing everything, the list will be
-" filtered to only include Ex commands that started with the word “help.”
+" filtered to only include Ex commands that started with the word 'help'
 
 " Instead, we can repeat the last Ex command by pressing @: (see :h @: )
 
-" On Vim’s command line, the % symbol is shorthand for the current file name (see :h cmdline-special ).
+" On Vim's command line, the % symbol is shorthand for the current file name (see :h cmdline-special ).
 
-" The :!{cmd} command takes on a different meaning when it’s given a range.
+" The :!{cmd} command takes on a different meaning when it's given a range.
 " The lines specified by [range] are passed as standard input for the {cmd}, and
 " then the output from {cmd} overwrites the original contents of [range]. Or to
 " put it another way, the [range] is filtered through the specified {cmd} (see
@@ -704,9 +697,9 @@ augroup END
 
 " :%s//\=@0/g replace the search with the contents of the yank register
 
-" We can always specify a new range and replay the substitution using the :&& command. It doesn’t matter what range was used the last time. :&& by itself acts on the current line, :'<,'>&& acts on the visual selection, and :%&& acts on the entire file. As we saw already, the g& command is a handy shortcut for :%&& .
+" We can always specify a new range and replay the substitution using the :&& command. It doesn't matter what range was used the last time. :&& by itself acts on the current line, :'<,'>&& acts on the visual selection, and :%&& acts on the entire file. As we saw already, the g& command is a handy shortcut for :%&& .
 
-" On Vim’s command line, | simply stands for a command separator, making it equivalent to the semicolon in the Unix shell. 
+" On Vim's command line, | simply stands for a command separator, making it equivalent to the semicolon in the Unix shell. 
 
 " :g/{pattern}/[cmd] 
 
@@ -797,7 +790,7 @@ augroup END
 "                           |   result as replacement {string}
 " ---------------------------------------------------------------------------------
 
-" The c flag causes Vim to show us each match and ask “Replace with copy?”
+" The c flag causes Vim to show us each match and ask 'Replace with copy?'
 " The following commands are available when we are in the replace mode:
 
 " Trigger                       Effect
@@ -808,26 +801,26 @@ augroup END
 " ---------------------------------------------------------------------------------
 " q                         |   Quit substituting
 " ---------------------------------------------------------------------------------
-" l                         |   “last”—Substitute this match, then quit
+" l                         |   'last' Substitute this match, then quit
 " ---------------------------------------------------------------------------------
-" a                         |   “all”—Substitute this and any remaining matches
+" a                         |   'all' Substitute this and any remaining matches
 " ---------------------------------------------------------------------------------
 " <C-e>                     |   Scroll the screen up
 " ---------------------------------------------------------------------------------
 " <C-y>                     |   Scroll the screen down
 " ---------------------------------------------------------------------------------
 
-" Configure the ‘path’
-" The ‘path’ option allows us to specify a set of directories inside of which Vim
+" Configure the 'path'
+" The 'path' option allows us to specify a set of directories inside of which Vim
 " will search when the :find command is invoked (see :h 'path' ). In our case, we
 " want to make it easier to look up files in the app/controllers and app/views directo-
 " ries. We can add these to our path simply by running this:
-" ➾ :set path+=app/**
+" => :set path+=app/**
 " The ** wildcard matches all subdirectories beneath the app/ directory. We
 " discussed wildcards in Populate the Argument List, on page 81, but the
-" treatment of * and ** is slightly different in the context of the ‘path’ setting (see
+" treatment of * and ** is slightly different in the context of the 'path' setting (see
 " :h file-searching ). The wildcards are handled by Vim rather than by the shell.
 
-" Vim has a vast number of motions. We can’t cover them all in this chapter,
-" so I recommend that you look up the :h motion.txt section of Vim’s documen-
+" Vim has a vast number of motions. We can't cover them all in this chapter,
+" so I recommend that you look up the :h motion.txt section of Vim's documen-
 " tation for a complete reference.
