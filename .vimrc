@@ -1,6 +1,10 @@
 " -----------------  General settings ------------------"
 set nocompatible " Be improved!
 
+" Let's try this
+set timeoutlen=1000 ttimeoutlen=0
+set esckeys
+
 " Turns default plugins on
 filetype plugin on
 
@@ -161,12 +165,16 @@ nmap <Leader><space> :nohlsearch<cr>
 
 " Quick run plugininstall
 nmap <C-p><C-i> :PluginInstall<cr>
+nmap <C-p><C-d> :PluginClean<cr>
+
+" Opposite of shift-j
+nnoremap K a<CR><Esc>k$ 
 
 " Nerd tree toggle
-nmap <C-k><C-b> :NERDTreeToggle<cr>
+" nmap <C-k><C-b> :NERDTreeToggle<cr>
 
-" FZF browse recent files 
-nmap <C-e> :History<cr>
+" CtrlP browse recent files 
+nmap <C-e> :CtrlPMRU<cr>
 
 " FZF browse tags
 nmap <Leader>r :BTags<cr>
@@ -237,6 +245,15 @@ let NERDTreeHijackNetrw = 0
 
 
 "
+" CtrlP
+"
+let g:ctrlp_custom_ignore = 'node_modules\DS_Store\|git'
+let g:ctrlp_match_window = 'top,order:ttb,min:1,max:30,results:30'
+let g:ctrlp_map=',p'
+let g:ctrlp_cmd = 'CtrlP'
+
+
+"
 " Greplace.vim
 "
 " Use ag for search
@@ -270,11 +287,31 @@ let g:jsx_ext_required = 0
 "
 " Elm
 "
-nnoremap <leader>el :ElmEvalLine<CR>
-vnoremap <leader>es :<C-u>ElmEvalSelection<CR>
-nnoremap <leader>em :ElmMakeCurrentFile<CR>
+let g:elm_format_autosave = 1
+let g:elm_setup_keybindings = 0
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:elm_syntastic_show_warnings = 0
+
+nmap <leader>er :ElmRepl<CR>
+nmap <leader>eo :ElmBrowseDocs<CR>
 
 "
+" Syntastic
+"
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+nmap <Leader>s<Space> :SyntasticReset<cr>
+
+
+
 " fzf.vim
 " Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
@@ -301,17 +338,18 @@ nnoremap <c-p> :FZF<cr>
 
 "------------------ Visuals ------------------"
 
+" 256 Terminal collors yeey :D
+set t_Co=256
+
 syntax enable
 set background=dark
 colorscheme hybrid_reverse
+hi MatchParen cterm=bold ctermbg=none ctermfg=magenta
 
 " Custom highlighting, because the defaults are not custom built for me :-)..
-hi Search cterm=NONE ctermfg=white ctermbg=565656
-hi IncSearch cterm=NONE ctermfg=white ctermbg=565656
-hi MatchParen cterm=bold ctermbg=gray ctermfg=green
+" hi Search cterm=NONE ctermfg=white ctermbg=565656
+" hi IncSearch cterm=NONE ctermfg=white ctermbg=565656
 
-" 256 Terminal collors yeey :D
-set t_Co=256
 
 " Left padding hack
 hi LineNr guibg=bg
@@ -324,7 +362,6 @@ set linebreak
 set nolist
 set textwidth=0
 set wrapmargin=0
-
 
 
 
@@ -350,7 +387,7 @@ autocmd!
 autocmd BufWritePost .vimrc source %
 augroup end
 
-autocmd BufWritePost *.elm ElmMakeCurrentFile
+" autocmd BufWritePost *.elm ElmMakeCurrentFile
 
 
 
