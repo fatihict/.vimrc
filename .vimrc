@@ -1,5 +1,26 @@
-" -----------------  General settings ------------------"
+"companySpecific/companySpecific.styl -----------------  General settings ------------------"
 set nocompatible " Be improved!
+
+" Deal with large files
+" http://vim.wikia.com/wiki/Faster_loading_of_large_files
+" file is large from 10mb
+let g:LargeFile = 1024 * 1024 * 10
+augroup LargeFile
+ autocmd BufReadPre * let f=getfsize(expand("<afile>")) | if f > g:LargeFile || f == -2 | call LargeFile() | endif
+augroup END
+
+function! LargeFile()
+ " no syntax highlighting etc
+ set eventignore+=FileType
+ " save memory when other file is viewed
+ setlocal bufhidden=unload
+ " is read-only (write with :w new_filename)
+ setlocal buftype=nowrite
+ " no undo possible
+ setlocal undolevels=-1
+ " display message
+ autocmd VimEnter *  echo "The file is larger than " . (g:LargeFile / 1024 / 1024) . " MB, so some options are changed (see .vimrc for details)."
+endfunction
 
 " Let's try this
 set timeoutlen=1000 ttimeoutlen=0
@@ -211,6 +232,10 @@ noremap \ ,
 nnoremap & :&&<CR>
 xnoremap & :&&<CR>
 
+" Normally g] will list all tags for the current word under the cursor and <c-]> will take you to the only match if there is one and list all matches if there are multiple.
+nnoremap g] g<c-]>
+nnoremap g<c-]> g]
+
 " Move a line of text using ALT+[jk]
 " Alt keys are represented with the esc key modifier, so when i go back to normal mode pressing <esc> and follow with j or k these mapping will execute..ê
 " nmap <A-k> mz:m-2<cr>`z
@@ -363,11 +388,15 @@ set nolist
 set textwidth=0
 set wrapmargin=0
 
+" Show tabs and whitespaces as unicode chars
+exec "set listchars=tab:\uBB\uBB,trail:\uB7,nbsp:~"
+set list
+
 
 
 
 "------------------ Laravel-specific ------------------"
-nmap <Leader><Leader>m :FZF<cr>app/
+nmap <Leader><Leader>m :FZF app/<cr>
 nmap <Leader>lr :e app/Http/routes.php<cr>
 nmap <Leader>lm :!php artisan make:
 nmap <Leader><Leader>c :e app/Http/Controllers/<cr>
